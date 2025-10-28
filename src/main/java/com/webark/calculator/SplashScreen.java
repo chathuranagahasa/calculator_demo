@@ -4,9 +4,7 @@ import java.awt.*;
 public class SplashScreen {
 
     public static void showSplashAndStart() {
-        // --- CODE SMELL EXAMPLE METHOD (long, duplicated, poor naming) ---
-        // This method violates multiple clean code principles intentionally.
-
+        // --- CODE SMELL: Long Method, Magic Numbers, Duplicates, Dead Code ---
         JFrame frame = new JFrame("Splash");
         frame.setUndecorated(true);
         frame.setSize(400, 200);
@@ -17,9 +15,9 @@ public class SplashScreen {
         lbl.setForeground(Color.WHITE);
         lbl.setFont(new Font("Arial", Font.BOLD, 18));
 
-        // Adding icon (loading gif)
         ImageIcon icon = new ImageIcon("loading.gif"); // hardcoded path
         JLabel iconLabel = new JLabel(icon);
+
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(30, 87, 120));
         panel.add(lbl, BorderLayout.CENTER);
@@ -28,9 +26,8 @@ public class SplashScreen {
         frame.add(panel);
         frame.setVisible(true);
 
-        // --- Duplicate behavior below (intentional code smell) ---
         try {
-            Thread.sleep(1000); // Magic number
+            Thread.sleep(1000);
             System.out.println("Loading 33%");
             Thread.sleep(1000);
             System.out.println("Loading 66%");
@@ -40,17 +37,75 @@ public class SplashScreen {
             e.printStackTrace();
         }
 
-        // Uncommented code (dead code example)
-        // frame.dispose(); 
-        // System.out.println("Old splash closed.");
-
         // poor naming, direct call to start main app
         startMainApp(frame);
     }
 
     private static void startMainApp(JFrame f) {
-        f.dispose(); // now close splash
-        // Another hardcoded direct call
-        new CalculatorUI().setVisible(true); // assume Calculator.java exists in your project
+        f.dispose();
+        new Calculator().setVisible(true); // assume Calculator.java exists
+    }
+
+    // ------------------------------------------------------
+    // Below methods are added intentionally with different smells
+    // ------------------------------------------------------
+
+    // Method 1: Poor naming, unused parameter, confusing purpose
+    public static void doStuff(int x) {
+        // CODE SMELL: meaningless name, unused parameter
+        System.out.println("Doing stuff... but not really using x = " + x);
+        String s = "Calculator";
+        for (int i = 0; i < 3; i++) { // duplicate logic from main splash
+            System.out.println(s + " loading part " + (i + 1));
+            try {
+                Thread.sleep(500);
+            } catch (Exception e) {
+                // swallowed exception
+            }
+        }
+    }
+
+    // Method 2: Duplicated code and hardcoded values
+    public static void loadFakeProgress() {
+        // CODE SMELL: duplicate of loading logic from showSplashAndStart()
+        for (int i = 1; i <= 3; i++) {
+            System.out.println("Fake Loading " + (i * 33) + "%");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Method 3: Feature envy and poor cohesion
+    public static void showMessageInAnotherWay() {
+        // CODE SMELL: unrelated UI creation in same class
+        JFrame f = new JFrame("Extra Message");
+        f.setSize(300, 150);
+        JLabel msg = new JLabel("Welcome Again!", JLabel.CENTER);
+        msg.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+        f.add(msg);
+        f.setLocation(500, 300);
+        f.setVisible(true);
+
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        f.dispose();
+    }
+
+    // Method 4: Overly complex and mixed responsibilities
+    public static String doEverything(int a, int b, String name) {
+        // CODE SMELL: mixed logic - calculation, UI, string manipulation
+        int result = a + b;
+        System.out.println("Sum = " + result);
+        JOptionPane.showMessageDialog(null, "Hi " + name + ", result is " + result);
+        if (result > 10) {
+            showMessageInAnotherWay(); // circular dependency smell
+        }
+        return name + result; // poor return purpose
     }
 }
