@@ -3,43 +3,99 @@ import java.awt.*;
 
 public class SplashScreen {
 
+    // public static void showSplashAndStart() {
+    //     // --- CODE SMELL: Long Method, Magic Numbers, Duplicates, Dead Code ---
+    //     JFrame frame = new JFrame("Splash");
+    //     frame.setUndecorated(true);
+    //     frame.setSize(400, 200);
+    //     frame.setLocationRelativeTo(null);
+    //     frame.getContentPane().setBackground(new Color(30, 87, 120));
+
+    //     JLabel lbl = new JLabel("Calculator Loading...", JLabel.CENTER);
+    //     lbl.setForeground(Color.WHITE);
+    //     lbl.setFont(new Font("Arial", Font.BOLD, 18));
+
+    //     ImageIcon icon = new ImageIcon("loading.gif"); // hardcoded path
+    //     JLabel iconLabel = new JLabel(icon);
+
+    //     JPanel panel = new JPanel(new BorderLayout());
+    //     panel.setBackground(new Color(30, 87, 120));
+    //     panel.add(lbl, BorderLayout.CENTER);
+    //     panel.add(iconLabel, BorderLayout.SOUTH);
+
+    //     frame.add(panel);
+    //     frame.setVisible(true);
+
+    //     try {
+    //         Thread.sleep(1000);
+    //         System.out.println("Loading 33%");
+    //         Thread.sleep(1000);
+    //         System.out.println("Loading 66%");
+    //         Thread.sleep(1000);
+    //         System.out.println("Loading 100%");
+    //     } catch (InterruptedException e) {
+    //         e.printStackTrace();
+    //     }
+
+    //     // poor naming, direct call to start main app
+    //     startMainApp(frame);
+    // }
+
     public static void showSplashAndStart() {
-        // --- CODE SMELL: Long Method, Magic Numbers, Duplicates, Dead Code ---
-        JFrame frame = new JFrame("Splash");
-        frame.setUndecorated(true);
-        frame.setSize(400, 200);
-        frame.setLocationRelativeTo(null);
-        frame.getContentPane().setBackground(new Color(30, 87, 120));
+    JFrame frame = createSplashFrame();
+    showProgressSteps();
+    startMainApp(frame);
+}
 
-        JLabel lbl = new JLabel("Calculator Loading...", JLabel.CENTER);
-        lbl.setForeground(Color.WHITE);
-        lbl.setFont(new Font("Arial", Font.BOLD, 18));
+/**
+ * Creates and configures the splash screen window.
+ */
+private static JFrame createSplashFrame() {
+    JFrame frame = new JFrame("Splash");
+    frame.setUndecorated(true);
+    frame.setSize(400, 200);
+    frame.setLocationRelativeTo(null);
+    frame.getContentPane().setBackground(new Color(30, 87, 120));
 
-        ImageIcon icon = new ImageIcon("loading.gif"); // hardcoded path
-        JLabel iconLabel = new JLabel(icon);
+    JLabel label = new JLabel("Calculator Loading...", JLabel.CENTER);
+    label.setForeground(Color.WHITE);
+    label.setFont(new Font("Arial", Font.BOLD, 18));
 
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(30, 87, 120));
-        panel.add(lbl, BorderLayout.CENTER);
-        panel.add(iconLabel, BorderLayout.SOUTH);
+    JLabel iconLabel = new JLabel(new ImageIcon("loading.gif"));
 
-        frame.add(panel);
-        frame.setVisible(true);
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.setBackground(new Color(30, 87, 120));
+    panel.add(label, BorderLayout.CENTER);
+    panel.add(iconLabel, BorderLayout.SOUTH);
 
-        try {
-            Thread.sleep(1000);
-            System.out.println("Loading 33%");
-            Thread.sleep(1000);
-            System.out.println("Loading 66%");
-            Thread.sleep(1000);
-            System.out.println("Loading 100%");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    frame.add(panel);
+    frame.setVisible(true);
+    return frame;
+}
 
-        // poor naming, direct call to start main app
-        startMainApp(frame);
+/**
+ * Displays simulated loading progress in console.
+ */
+private static void showProgressSteps() {
+    int[] progressSteps = {33, 66, 100};
+    for (int step : progressSteps) {
+        pause(1000);
+        System.out.println("Loading " + step + "%");
     }
+}
+
+/**
+ * Handles thread sleep safely.
+ */
+private static void pause(int millis) {
+    try {
+        Thread.sleep(millis);
+    } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        System.err.println("Splash screen interrupted.");
+    }
+}
+
 
     private static void startMainApp(JFrame f) {
         f.dispose();
